@@ -1,11 +1,11 @@
-# 🌍 InternLink – Kigali
+# InternLink – Kigali
 **A Decoupled Full-Stack Platform for Skill-Based Internship Matching**
 
 InternLink is a professional web application designed to bridge the gap between ambitious university students in Rwanda and innovative Small and Medium Enterprises (SMEs). Moving away from traditional, biased resume screening, InternLink utilizes a proprietary skill-matching engine to connect the right technical talent with the right local opportunities.
 
 ---
 
-## 🚀 Core Features
+##  Core Features
 * **Role-Based Access Control (RBAC):** Distinct dashboard experiences and authorization flows for Students and Employers (SMEs).
 * **Smart Matching Engine:** Algorithmic matching of student skills to job requirements using keyword intersection.
 * **Hybrid Job Feed:** Aggregates exclusive local InternLink opportunities with global remote roles via the Arbeitnow API.
@@ -14,7 +14,7 @@ InternLink is a professional web application designed to bridge the gap between 
 
 ---
 
-## 🧠 The Skill-Matching Algorithm (Implementation Details)
+## The Skill-Matching Algorithm (Implementation Details)
 At the core of InternLink is our **Keyword Intersection Matching Engine**. To optimize for performance and transparency in our MVP, we implemented a deterministic algorithm that calculates compatibility based on technical requirements.
 
 ### The Execution Flow:
@@ -27,7 +27,7 @@ At the core of InternLink is our **Keyword Intersection Matching Engine**. To op
 
 ---
 
-## 🏗 System Architecture & Tech Stack
+## System Architecture & Tech Stack
 
 ### Backend (The REST API)
 * **Language:** Python 3.14
@@ -44,23 +44,24 @@ At the core of InternLink is our **Keyword Intersection Matching Engine**. To op
 
 ---
 
-## 👥 Team Roles & Development Workflow
+##  Team Roles & Development Workflow
 This project was built collaboratively. To prevent Git merge conflicts and ensure clear accountability, domains were strictly separated:
 
 | Name | Role | Primary Domain |
 | :--- | :--- | :--- |
-| **Charlie Black (Lead)** | **Backend Architect** | API Logic, Database Schema, Matching Engine, Security |
-| **Teammate B** | **Integration Engineer** | Asynchronous Fetch Logic, State Management |
-| **Teammate C** | **UI/UX Designer** | Global Styling, Theme Tokens, Responsiveness |
-| **Teammate D** | **Student Experience** | Student Dashboard, Job Board Layouts, Profiles |
-| **Teammate E** | **SME & Auth Lead** | Employer Dashboard, Authentication Flow, Onboarding |
+| **Charles** | **Backend Architect** | API Logic, Database Schema, Matching Engine, Security |
+| **Cedric** | **Integration Engineer** | Asynchronous Fetch Logic, State Management |
+| **Jesse** | **UI/UX Designer** | Global Styling, Theme Tokens, Responsiveness |
+| **Liata** | **UI/UX Designer** | Global Styling, Theme Tokens, Responsiveness |
+| **Ayobamidele** | **Student Experience** | Student Dashboard, Job Board Layouts, Profiles |
+| **Ayobamidele** | **SME & Auth Lead** | Employer Dashboard, Authentication Flow, Onboarding |
 
 **Git Protocol:** * Always run `git pull origin main` before branching. 
 * Commit changes to isolated feature branches (e.g., `feature/login-ui`) before opening pull requests to the main branch.
 
 ---
 
-## 🛠 Local Setup & Installation
+## Local Setup & Installation
 
 To run this project locally, the backend and frontend must be run simultaneously. 
 
