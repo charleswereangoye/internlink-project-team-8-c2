@@ -1,71 +1,119 @@
-# InternLink – Kigali
-**A Decoupled Full-Stack Platform for Skill-Based Internship Matching**
+# InternLink 
 
-InternLink is a professional web application designed to bridge the gap between ambitious university students in Rwanda and innovative Small and Medium Enterprises (SMEs). Moving away from traditional, biased resume screening, InternLink utilizes a proprietary skill-matching engine to connect the right technical talent with the right local opportunities.
+InternLink is a full-stack internship matching platform connecting students and employers (SMEs).  
+It includes a Flask + PostgreSQL backend and a static HTML/CSS/JS frontend.
 
----
+## Features
 
-##  Core Features
-* **Role-Based Access Control (RBAC):** Distinct dashboard experiences and authorization flows for Students and Employers (SMEs).
-* **Smart Matching Engine:** Algorithmic matching of student skills to job requirements using keyword intersection.
-* **Hybrid Job Feed:** Aggregates exclusive local InternLink opportunities with global remote roles via the Arbeitnow API.
-* **Live Analytics Dashboard:** Real-time time-series charting (via Chart.js) for SMEs to track application pipelines.
-* **Decoupled Architecture:** Independent Frontend (Client) and Backend (API) for scalable deployment and parallel team development.
+- User authentication for `student` and `sme` roles
+- Internship posting and management for SMEs
+- Internship browsing and application tracking for students
+- Student profile and skills management
+- Skill-based internship matching
+- Dashboard analytics (including a live applications time series for SMEs)
 
----
+## Tech Stack
 
-## The Skill-Matching Algorithm (Implementation Details)
-At the core of InternLink is our **Keyword Intersection Matching Engine**. To optimize for performance and transparency in our MVP, we implemented a deterministic algorithm that calculates compatibility based on technical requirements.
+- Backend: Python, Flask, psycopg, PostgreSQL
+- Frontend: HTML, CSS, Vanilla JavaScript
+- Charts: Chart.js
 
-### The Execution Flow:
-1. **Data Normalization:** When a student requests a match, the algorithm fetches their comma-separated skill string from the database (e.g., `React, Python, Django`). It standardizes the data by stripping whitespace and converting the string into a lowercased array: `['react', 'python', 'django']`.
-2. **Corpus Generation:** The engine retrieves all active internships. For each job, it concatenates the `title` and `description` into a single, lowercased searchable text corpus.
-3. **Intersection Scoring:** The algorithm iterates through the student's normalized skill array. For every skill found as a substring within a job's corpus, the job is awarded `+1` to its `match_score`. 
-4. **Filtering & Sorting:** Jobs with a `match_score` of `0` are filtered out. The remaining viable matches are sorted in descending order, ensuring the most technically aligned opportunities appear at the very top of the student's feed.
+## Project Structure
 
-*Computational Complexity:* The algorithm operates at an efficient $O(N \times M)$ time complexity, where $N$ is the number of active jobs and $M$ is the number of skills in the user's profile.
+```text
+internlink_sample/
+  backend/
+    app.py
+    requirements.txt
+    .env                # create this locally
+  frontend/
+    index.html
+    listing.html
+    login.html
+    register.html
+    dashboard.html
+    sme_dashboard.html
+    css/
+    js/
+```
 
----
+## Prerequisites
 
-## System Architecture & Tech Stack
+- Python 3.10+
+- PostgreSQL database
+- A terminal (PowerShell, CMD, or Bash)
 
-### Backend (The REST API)
-* **Language:** Python 3.14
-* **Framework:** Flask (with Flask-CORS for cross-origin resource sharing)
-* **Database Driver:** Psycopg 3 (Modern PostgreSQL adapter)
-* **Database:** Aiven Cloud PostgreSQL
-* **Security:** Werkzeug password hashing (PBKDF2-SHA256)
+## Backend Setup
 
-### Frontend (The Client)
-* **Structure:** HTML5 (Standalone/Decoupled pages)
-* **Styling:** CSS3 (Custom CSS Variables, CSS Grid/Flexbox layouts, Dark/Light Theme Tokens)
-* **Interactivity:** Vanilla JavaScript (ES6+ `async/await` Fetch API)
-* **Data Visualization:** Chart.js
+1. Navigate to backend:
 
----
+   ```bash
+   cd backend
+   ```
 
-##  Team Roles & Development Workflow
-This project was built collaboratively. To prevent Git merge conflicts and ensure clear accountability, domains were strictly separated:
+2. (Recommended) Create and activate a virtual environment:
 
-| Name | Role | Primary Domain |
-| :--- | :--- | :--- |
-| **Charles** | **Backend Architect** | API Logic, Database Schema, Matching Engine, Security |
-| **Cedric** | **Integration Engineer** | Asynchronous Fetch Logic, State Management |
-| **Jesse** | **UI/UX Designer** | Global Styling, Theme Tokens, Responsiveness |
-| **Liata** | **UI/UX Designer** | Global Styling, Theme Tokens, Responsiveness |
-| **Ayobamidele** | **Student Experience** | Student Dashboard, Job Board Layouts, Profiles |
-| **Ayobamidele** | **SME & Auth Lead** | Employer Dashboard, Authentication Flow, Onboarding |
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate
+   ```
 
-**Git Protocol:** * Always run `git pull origin main` before branching. 
-* Commit changes to isolated feature branches (e.g., `feature/login-ui`) before opening pull requests to the main branch.
+3. Install dependencies:
 
----
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## Local Setup & Installation
+4. Create `backend/.env`:
 
-To run this project locally, the backend and frontend must be run simultaneously. 
+   ```env
+   DATABASE_URL=postgresql://<username>:<password>@<host>:<port>/<database_name>
+   ```
 
-### 1. Database Configuration
-Create a `.env` file inside the `/backend` directory. **(Note: Never commit this file to version control).**
-```env
-DATABASE_URL=your_postgresql_connection_string
+5. Start the Flask server:
+
+   ```bash
+   python app.py
+   ```
+
+The backend runs on `http://127.0.0.1:5000` by default.
+
+6. Initialize database schema (first run only):
+
+   Open this URL in your browser:
+
+   ```text
+   http://127.0.0.1:5000/init-db
+   ```
+
+## Frontend Setup
+
+The frontend is static and expects the backend to run at `http://127.0.0.1:5000`.
+
+From the project root:
+
+```bash
+cd frontend
+python -m http.server 5500
+```
+
+Then open:
+
+- `http://127.0.0.1:5500/index.html`
+
+## Main API Endpoints
+
+- `POST /register` - Register student or SME account
+- `POST /login` - Login and receive role/user ID
+- `GET|POST|PUT|DELETE /api/internships` - Internship CRUD (soft delete on close)
+- `GET|POST|PUT /api/applications` - Apply and manage application status
+- `GET|PUT /api/profile` - Student profile updates
+- `GET /api/match` - Skill-based internship matching
+- `GET /api/sme_metrics/applications_timeseries` - SME live applications chart data
+
+## Notes
+
+- The frontend also fetches external internships from `https://www.arbeitnow.com/api/job-board-api`.
+- If you deploy the backend, update `API_BASE_URL` in `frontend/js/script.js`.
+- There are `.docx` files in `frontend/` that appear to be documentation artifacts and are not required to run the app.
+
