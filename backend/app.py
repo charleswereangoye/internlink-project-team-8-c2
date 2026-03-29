@@ -13,7 +13,7 @@ load_dotenv(os.path.join(basedir, '.env'))
 
 # Initialize Flask application and enable Cross-Origin Resource Sharing
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # --- DATABASE WRAPPER ---
 # Provides a standardized interface for executing psycopg queries 
