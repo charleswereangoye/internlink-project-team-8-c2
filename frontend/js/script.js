@@ -1,6 +1,6 @@
 //script.js
 
-const API_BASE_URL = "https://internlink-api.onrender.com";
+const API_BASE_URL = "https://internlink-project-team-8-c2.onrender.com";
 
 /**
  * Global Authentication Redirect
