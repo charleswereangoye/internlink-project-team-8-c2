@@ -402,16 +402,41 @@ function updateChartColors() {
  * Manages HTTP session requests and client-side token storage.
  */
 async function login() {
-  const email = document.querySelector("#login-email").value;
-  const password = document.querySelector("#login-password").value;
-  if (!email || !password) return showToast("Please fill all required fields");
-
   try {
+    // 1. Safely look for the HTML elements first
+    const emailEl = document.querySelector("#login-email");
+    const passEl = document.querySelector("#login-password");
+
+    // 2. If JavaScript can't find the boxes, stop and tell us immediately
+    if (!emailEl || !passEl) {
+        console.error("DOM ERROR: HTML IDs do not match the JavaScript! Check your login.html file.");
+        showToast("System Error: Cannot find input boxes. Check Console.");
+        return;
+    }
+
+    // 3. Now it is safe to grab the values
+    const email = emailEl.value;
+    const password = passEl.value;
+
+    if (!email || !password) {
+        return showToast("Please fill all required fields");
+    }
+
+    // 4. Send the payload to Render
     const res = await fetch(`${API_BASE_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: email, password: password })
     });
+
+    // 5. If Python actually crashes (500 error), catch the text
+    if (!res.ok) {
+        const errText = await res.text();
+        console.error("SERVER ERROR:", errText);
+        throw new Error(`HTTP Error ${res.status}`);
+    }
+
+    // 6. Success handling
     const data = await res.json();
     
     if (data.status === "success") {
@@ -426,35 +451,68 @@ async function login() {
     } else {
       showToast("Authentication failed: Invalid credentials");
     }
-  } catch (err) { showToast("Internal server error during authentication"); }
+
+  } catch (err) { 
+    console.error("Login crash trace:", err);
+    showToast("Error: Check your browser console (F12)!"); 
+  }
 }
 
 async function register() {
-  const roleElement = document.getElementById("register-role");
-  const companyElement = document.querySelector("#register-company");
-  const role = roleElement ? roleElement.value : "student";
-  const companyName = companyElement ? companyElement.value : "";
-  const first = document.querySelector("#register-first").value;
-  const last = document.querySelector("#register-last").value;
-  const email = document.querySelector("#register-email").value;
-  const password = document.querySelector("#register-password").value;
-
-  // Enforce validation rule: SMEs must provide a company name
-  if (!first || !last || !email || !password || (role === "sme" && !companyName)) {
-      return showToast("Please fill all required fields to proceed.");
-  }
-
   try {
+    // 1. Safely look for the HTML elements first
+    const firstEl = document.querySelector("#register-first");
+    const lastEl = document.querySelector("#register-last");
+    const emailEl = document.querySelector("#register-email");
+    const passEl = document.querySelector("#register-password");
+    const roleEl = document.getElementById("register-role");
+    const compEl = document.querySelector("#register-company");
+
+    // 2. If JavaScript can't find the boxes, stop and tell us immediately
+    if (!firstEl || !lastEl || !emailEl || !passEl) {
+        console.error("DOM ERROR: HTML IDs do not match the JavaScript! Check your register.html file.");
+        showToast("System Error: Cannot find input boxes. Check Console.");
+        return;
+    }
+
+    // 3. Now it is safe to grab the values
+    const role = roleEl ? roleEl.value : "student";
+    const companyName = compEl ? compEl.value : "";
+    const first = firstEl.value;
+    const last = lastEl.value;
+    const email = emailEl.value;
+    const password = passEl.value;
+
+    if (!first || !last || !email || !password || (role === "sme" && !companyName)) {
+        return showToast("Please fill all required fields to proceed.");
+    }
+
+    // 4. Send the payload to Render
     const res = await fetch(`${API_BASE_URL}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ role, companyName, first, last, email, password })
     });
+
+    // 5. If Python crashes (500 error), catch the text so we can read it
+    if (!res.ok) {
+        const errText = await res.text();
+        console.error("SERVER ERROR:", errText);
+        throw new Error(`HTTP Error ${res.status}`);
+    }
+
+    // 6. Success handling
     const data = await res.json();
     showToast(data.message);
     
-    if (data.status === "success") setTimeout(() => window.location.href = "login.html", 900);
-  } catch (err) { showToast("Registration payload rejected by server"); }
+    if (data.status === "success") {
+        setTimeout(() => window.location.href = "login.html", 900);
+    }
+
+  } catch (err) { 
+    console.error("Registration crash trace:", err);
+    showToast("Error: Check your browser console (F12)!"); 
+  }
 }
 
 function logout() {
